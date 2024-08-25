@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# Blog_Website_frontend_3
+# BlogWebsite_frontend
 =======
 # React + Vite
 
