@@ -1,2 +1,2 @@
-export const URL="http://localhost:5000"
-export const IMF="http://localhost:5000/images/"
+export const URL="https://blog-website-backend-1-ruv2.onrender.com"
+export const IMF="https://blog-website-backend-1-ruv2.onrender.com/images/"
