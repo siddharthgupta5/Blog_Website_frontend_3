@@ -1,11 +1,12 @@
 
+import { IMF } from "../url"
 
 const HomePosts = ({post}) => {
   return (
     <div className="w-full flex mt-8 space-x-4">
     {/* left */}
     <div className="w-[35%] h-[200px] flex justify-center items-center">
-    <img src={post.photo} alt="" className="h-full w-full object-cover"/>
+    <img src={IMF+post.photo} alt="" className="h-full w-full object-cover"/>
     </div>
     {/* right */}
     <div className="flex flex-col w-[65%]">

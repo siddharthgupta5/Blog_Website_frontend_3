@@ -1,106 +1,68 @@
-// import Footer from "../components/Footer";
-// import Navbar from "../components/Navbar";
-// import ProfilePosts from "../components/ProfilePosts";
 
-// const BlogHistory = ({ user }) => {
-//     user=true;
-//   if (!user) {
-//     return (
-//       <div>
-//         <Navbar />
-//         <div className="px-8 mt-8 md:px-[200px] flex justify-center items-center">
-//           <h1 className="text-xl font-bold">Please log in to view your blog history.</h1>
-//         </div>
-//         <Footer />
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div>
-//       <Navbar />
-//       <div className="px-8 mt-8 md:px-[200px]">
-//         <h1 className="text-xl font-bold mb-4">Blog History for {user.username}</h1>
-//         <div className="px-8 mt-8 md:px-[200px] flex flex-col-reverse md:flex-row">
-//             <div className="flex flex-col w-full md:w-[70%] ">
-//                 <h1 className="text-xl mb-4 font-bold">Your posts:</h1>
-//                 <ProfilePosts userId={user.id} />
-//             </div>
-//         </div>
-//       </div>  
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogHistory;
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ProfilePosts from "../components/ProfilePosts";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { URL } from "../url";
+import HomePosts from "../components/HomePosts";
+import Loader from "../components/Loader";
 
-const BlogHistory = ({ user }) => {
-    user = true; // Placeholder for user; replace with actual user authentication logic.
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            title: "10 uses of AI",
-            description: "Before going into the possibilities of this technology innovator, you should understand what AI entails...",
-            date: "22/08/2024",
-            time: "11:50",
-        },
-        // Add more posts here
-    ]);
+const BlogHistory = () => {
 
-    const handleDelete = (postId) => {
-        const confirmed = window.confirm("Are you sure you want to delete this post?");
-        if (confirmed) {
-            setPosts(posts.filter(post => post.id !== postId));
-        }
-    };
+    const param = useParams().id
+    const [posts,setPosts] = useState([])
+    const {user,setUser} = useContext(UserContext)
 
-    if (!user) {
-        return (
-            <div>
-                <Navbar />
-                <div className="px-8 mt-8 md:px-[200px] flex justify-center items-center">
-                    <h1 className="text-xl font-bold">Please log in to view your blog history.</h1>
-                </div>
-                <Footer />
-            </div>
-        );
+    const {search} = useLocation()
+    const [noResults,setNoResults]=useState(false)
+    const [loader,setLoader]=useState(false)
+
+
+    const fetchPosts=async () => {
+
+        setLoader(true)
+        try {
+            const res=await axios.get(URL+"/api/posts/user/"+param)
+
+            const sortedPosts = res.data.sort((a,b) => new Date(b.updated) - new Date(a.updated));
+
+            setPosts(sortedPosts)
+            if(sortedPosts.length===0){
+            setNoResults(true)
+            }
+            else{
+            setNoResults(false)
+            }
+            setLoader(false)
+
+        } catch (err) {
+
+            console.log(err)
+            setLoader(true)
+        }  
     }
+
+    useEffect(()=>{
+        fetchPosts()
+
+    },[search])
+
 
     return (
         <div>
             <Navbar />
-            <div className="px-8 mt-8 md:px-[200px]">
-                <h1 className="text-xl font-bold mb-4">Blog History:</h1>
-                <div className="space-y-6">
-                    {posts.map(post => (
-                        <div key={post.id} className="border p-4 rounded-lg shadow-lg bg-white">
-                            <h2 className="text-lg font-bold">{post.title}</h2>
-                            <p className="text-sm text-gray-500">{post.date} {post.time}</p>
-                            <p className="mt-2 mb-4 text-gray-700">{post.description}</p>
-                            <div className="flex justify-end space-x-4">
-                                <Link
-                                    to={`/edit/${post.id}`}
-                                    className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
-                                >
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(post.id)}
-                                    className="text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600"
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+            <div className="px-8 md:px-[200px] min-h-[80vh]" >
+            {loader?<div className="h-[40vh] flex justify-center items-center"><Loader/></div>:!noResults?posts.map((post)=>(
+                <>
+                  <Link to={user?`/posts/post/${post._id}`:"/login"}>
+                  <HomePosts key={post._id} post={post}/>
+                  </Link>
+                </>
+  
+              )):<h4 className="text-center font-bold mt-16">No posts available</h4>}
             </div>
             <Footer />
         </div>
