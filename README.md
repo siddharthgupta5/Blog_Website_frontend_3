@@ -46,7 +46,7 @@ To start the development server, use the following command:
 npm run dev
 ```
 
-This will start Vite’s development server and your application will be available at http://localhost:5000 by default.
+This will start Vite’s development server and your application will be available at http://localhost:5173 by default.
 
 
 
