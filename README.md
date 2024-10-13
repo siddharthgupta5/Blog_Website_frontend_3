@@ -6,6 +6,11 @@
 
 This is a frontend application built with React and Vite. It uses Vite for development and build processes, and Tailwind CSS for styling. This project provides a modern and fast development experience with React components and efficient build optimizations.
 
+## Demo Video
+
+Part 1 - [Blog Website Demonstration - 1st Part](https://drive.google.com/file/d/1YLWUrs7_Ce9gB44-VD1DQo8ZOKODIqlS/view?usp=sharing)
+Part 2 - [Blog Website Demonstration - 2nd Part](https://drive.google.com/file/d/12tVtDNh4FoILHCLT2fnGWuDO-srru18m/view?usp=sharing)
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v16 or later)
